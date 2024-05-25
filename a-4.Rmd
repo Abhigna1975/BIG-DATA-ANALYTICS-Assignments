@@ -1,0 +1,42 @@
+# Load necessary library
+library(stats)
+
+# Choose and load the dataset
+file_path <- file.choose()
+data <- read.csv(file_path)
+
+# Display the first few rows of the data to verify
+head(data)
+
+# Ensure only numeric columns are used for k-means clustering
+numeric_data <- data[sapply(data, is.numeric)]
+
+# Display the first few rows of the numeric data to verify
+head(numeric_data)
+
+# Remove rows with missing values
+numeric_data <- na.omit(numeric_data)
+
+# Alternatively, you could impute missing values, e.g., with the mean of each column
+# numeric_data <- lapply(numeric_data, function(x) { ifelse(is.na(x), mean(x, na.rm = TRUE), x) })
+# numeric_data <- as.data.frame(numeric_data)
+
+# Set the number of clusters
+k <- 3  # Adjust this based on your dataset
+
+# Perform k-means clustering
+kmeans_result <- kmeans(numeric_data, centers = k, nstart = 25)
+
+# Print the result
+print(kmeans_result)
+
+# Plot the clusters (using the first two numeric columns for plotting)
+plot(numeric_data[, 1:2], col = kmeans_result$cluster, main = "K-means Clustering", xlab = names(numeric_data)[1], ylab = names(numeric_data)[2])
+points(kmeans_result$centers[, 1:2], col = 1:k, pch = 8, cex = 2)
+
+# Display the structure and specific elements of the kmeans result
+str(kmeans_result)
+cat("Cluster Centers:\n")
+print(kmeans_result$centers)
+cat("Cluster Sizes:\n")
+print(kmeans_result$size)
